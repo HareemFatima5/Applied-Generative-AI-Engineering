@@ -18,3 +18,7 @@ A Streamlit app that fetches real weather data and uses Google Gemini AI to disp
 - Type a city name
 - Click "Get Weather"
 - View formatted weather data with AI advice
+  
+## Deployment
+
+![Deployment](assets/pic.PNG)
