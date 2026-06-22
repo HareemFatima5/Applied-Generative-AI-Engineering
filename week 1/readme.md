@@ -13,10 +13,8 @@ A Streamlit app that fetches real weather data and uses Google Gemini AI to disp
 - **OpenWeatherMap API** - Real weather data
 - **Google Gemini AI** - Data formatting & advice generation
 
-## Setup
-
-### 1. Clone & Install
-```bash
-git clone (https://github.com/HareemFatima5/Applied-Generative-AI-Engineering)
-cd weather-app
-pip install -r requirements.txt
+## How to Use
+- Enter both API keys in the sidebar
+- Type a city name
+- Click "Get Weather"
+- View formatted weather data with AI advice
