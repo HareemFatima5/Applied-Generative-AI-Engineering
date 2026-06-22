@@ -17,6 +17,6 @@ A Streamlit app that fetches real weather data and uses Google Gemini AI to disp
 
 ### 1. Clone & Install
 ```bash
-git clone <repo-url>
+git clone (https://github.com/HareemFatima5/Applied-Generative-AI-Engineering)
 cd weather-app
 pip install -r requirements.txt
