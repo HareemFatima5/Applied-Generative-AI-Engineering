@@ -1,6 +1,6 @@
 # AI Weather App
 
-A Streamlit app that fetches real weather data and uses Google Gemini AI to display it with helpful advice.
+A Streamlit app that fetches real weather data and uses Google Gemini AI to display it with a helpful advice.
 
 ## Features
 - Fetches live weather from OpenWeatherMap API
