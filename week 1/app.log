@@ -1,0 +1,215 @@
+2026-06-22 15:05:55,164 [INFO] LLMClient initialized with model: gemini-1.5-flash
+2026-06-22 15:05:55,165 [INFO] Sending request | User prompt: 'Here is the real weather data for Lahore: {'city': 'Lahore', 'country': 'PK', 'temperature_celsius': 41.4, 'temperature_fahrenheit': 106.5, 'condition': 'Clear Sky', 'humidity': 17, 'wind_speed_kmh': 10.1}'
+2026-06-22 15:05:55,704 [ERROR] API call failed: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.
+2026-06-22 15:07:18,616 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-22 15:07:18,617 [INFO] Sending request | User prompt: 'Here is the real weather data for Lahore: {'city': 'Lahore', 'country': 'PK', 'temperature_celsius': 41.4, 'temperature_fahrenheit': 106.5, 'condition': 'Clear Sky', 'humidity': 17, 'wind_speed_kmh': 10.1}'
+2026-06-22 15:07:20,599 [INFO] Response received from Gemini API
+2026-06-22 15:07:20,600 [INFO] JSON parsed successfully
+2026-06-22 15:07:33,413 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-22 15:07:33,414 [INFO] Sending request | User prompt: 'Here is the real weather data for Sahiwal: {'city': 'Montgomery', 'country': 'PK', 'temperature_celsius': 39.9, 'temperature_fahrenheit': 103.8, 'condition': 'Clear Sky', 'humidity': 26, 'wind_speed_kmh': 6.8}'
+2026-06-22 15:07:34,924 [INFO] Response received from Gemini API
+2026-06-22 15:07:34,925 [INFO] JSON parsed successfully
+2026-06-22 15:07:51,202 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-22 15:07:51,202 [INFO] Sending request | User prompt: 'Here is the real weather data for Lahore: {'city': 'Lahore', 'country': 'PK', 'temperature_celsius': 41.4, 'temperature_fahrenheit': 106.5, 'condition': 'Clear Sky', 'humidity': 17, 'wind_speed_kmh': 10.1}'
+2026-06-22 15:07:53,594 [INFO] Response received from Gemini API
+2026-06-22 15:07:53,595 [INFO] JSON parsed successfully
+2026-06-25 13:45:09,461 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-25 13:45:09,462 [INFO] Sending request to LLM | Query: 'What is the current weather in Sahiwal? Use the fetch_weather tool to get the data.'
+2026-06-25 13:45:10,529 [INFO] LLM decided to call fetch_weather with city: Sahiwal
+2026-06-25 13:45:10,530 [INFO] LLM triggered weather API call for: Sahiwal
+2026-06-25 13:45:10,862 [INFO] Weather data fetched successfully for Sahiwal
+2026-06-25 13:45:10,865 [INFO] Tool result: {
+  "city": "Montgomery",
+  "country": "PK",
+  "temperature_celsius": 42.6,
+  "temperature_fahrenheit": 108.7,
+  "condition": "Few Clouds",
+  "humidity": 20,
+  "wind_speed_kmh": 12.9
+}
+2026-06-25 13:45:10,866 [ERROR] API call failed: Could not create `Blob`, expected `Blob`, `dict` or an `Image` type(`PIL.Image.Image` or `IPython.display.Image`).
+Got a: <class 'google.ai.generativelanguage_v1beta.types.content.Content'>
+Value: parts {
+  function_response {
+    name: "fetch_weather"
+    response {
+      fields {
+        key: "wind_speed_kmh"
+        value {
+          number_value: 12.9
+        }
+      }
+      fields {
+        key: "temperature_fahrenheit"
+        value {
+          number_value: 108.7
+        }
+      }
+      fields {
+        key: "temperature_celsius"
+        value {
+          number_value: 42.6
+        }
+      }
+      fields {
+        key: "humidity"
+        value {
+          number_value: 20
+        }
+      }
+      fields {
+        key: "country"
+        value {
+          string_value: "PK"
+        }
+      }
+      fields {
+        key: "condition"
+        value {
+          string_value: "Few Clouds"
+        }
+      }
+      fields {
+        key: "city"
+        value {
+          string_value: "Montgomery"
+        }
+      }
+    }
+  }
+}
+role: "user"
+
+2026-06-25 13:45:22,230 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-25 13:45:22,230 [INFO] Sending request to LLM | Query: 'What is the current weather in Lahore? Use the fetch_weather tool to get the data.'
+2026-06-25 13:45:25,143 [INFO] LLM decided to call fetch_weather with city: Lahore
+2026-06-25 13:45:25,144 [INFO] LLM triggered weather API call for: Lahore
+2026-06-25 13:45:25,528 [INFO] Weather data fetched successfully for Lahore
+2026-06-25 13:45:25,529 [INFO] Tool result: {
+  "city": "Lahore",
+  "country": "PK",
+  "temperature_celsius": 42.3,
+  "temperature_fahrenheit": 108.2,
+  "condition": "Few Clouds",
+  "humidity": 19,
+  "wind_speed_kmh": 7.9
+}
+2026-06-25 13:45:25,530 [ERROR] API call failed: Could not create `Blob`, expected `Blob`, `dict` or an `Image` type(`PIL.Image.Image` or `IPython.display.Image`).
+Got a: <class 'google.ai.generativelanguage_v1beta.types.content.Content'>
+Value: parts {
+  function_response {
+    name: "fetch_weather"
+    response {
+      fields {
+        key: "wind_speed_kmh"
+        value {
+          number_value: 7.9
+        }
+      }
+      fields {
+        key: "temperature_fahrenheit"
+        value {
+          number_value: 108.2
+        }
+      }
+      fields {
+        key: "temperature_celsius"
+        value {
+          number_value: 42.3
+        }
+      }
+      fields {
+        key: "humidity"
+        value {
+          number_value: 19
+        }
+      }
+      fields {
+        key: "country"
+        value {
+          string_value: "PK"
+        }
+      }
+      fields {
+        key: "condition"
+        value {
+          string_value: "Few Clouds"
+        }
+      }
+      fields {
+        key: "city"
+        value {
+          string_value: "Lahore"
+        }
+      }
+    }
+  }
+}
+role: "user"
+
+2026-06-25 13:47:00,590 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-25 13:47:00,591 [INFO] Sending request to LLM | Query: 'What is the current weather in Lahore? Use the fetch_weather tool to get the data.'
+2026-06-25 13:47:02,083 [INFO] LLM decided to call fetch_weather with city: Lahore
+2026-06-25 13:47:02,084 [INFO] LLM triggered weather API call for: Lahore
+2026-06-25 13:47:02,464 [INFO] Weather data fetched successfully for Lahore
+2026-06-25 13:47:02,467 [INFO] Tool result: {
+  "city": "Lahore",
+  "country": "PK",
+  "temperature_celsius": 42.3,
+  "temperature_fahrenheit": 108.2,
+  "condition": "Few Clouds",
+  "humidity": 19,
+  "wind_speed_kmh": 7.9
+}
+2026-06-25 13:47:02,468 [ERROR] API call failed: module 'google.generativeai.types' has no attribute 'Content'
+2026-06-25 13:49:37,363 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-25 13:49:37,364 [INFO] Sending request to LLM | Query: 'What is the current weather in Lahore? Use the fetch_weather tool to get the data.'
+2026-06-25 13:49:38,909 [INFO] LLM decided to call fetch_weather with city: Lahore
+2026-06-25 13:49:38,910 [INFO] LLM triggered weather API call for: Lahore
+2026-06-25 13:49:39,756 [INFO] Weather data fetched successfully for Lahore
+2026-06-25 13:49:39,757 [INFO] Tool result: {
+  "city": "Lahore",
+  "country": "PK",
+  "temperature_celsius": 42.3,
+  "temperature_fahrenheit": 108.2,
+  "condition": "Few Clouds",
+  "humidity": 19,
+  "wind_speed_kmh": 7.9
+}
+2026-06-25 13:49:40,662 [INFO] LLM received tool result and is generating final response
+2026-06-25 13:49:40,662 [INFO] Response received from Gemini API
+2026-06-25 13:49:40,662 [INFO] LLM successfully orchestrated the weather API call
+2026-06-25 13:49:51,744 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-25 13:49:51,744 [INFO] Sending request to LLM | Query: 'What is the current weather in Sahiwal? Use the fetch_weather tool to get the data.'
+2026-06-25 13:49:56,249 [INFO] LLM decided to call fetch_weather with city: Sahiwal
+2026-06-25 13:49:56,251 [INFO] LLM triggered weather API call for: Sahiwal
+2026-06-25 13:49:57,094 [INFO] Weather data fetched successfully for Sahiwal
+2026-06-25 13:49:57,096 [INFO] Tool result: {
+  "city": "Montgomery",
+  "country": "PK",
+  "temperature_celsius": 42.6,
+  "temperature_fahrenheit": 108.7,
+  "condition": "Few Clouds",
+  "humidity": 20,
+  "wind_speed_kmh": 12.9
+}
+2026-06-25 13:49:58,364 [INFO] LLM received tool result and is generating final response
+2026-06-25 13:49:58,366 [INFO] Response received from Gemini API
+2026-06-25 13:49:58,367 [INFO] LLM successfully orchestrated the weather API call
+2026-06-25 13:50:06,765 [INFO] LLMClient initialized with model: gemini-3.1-flash-lite-preview
+2026-06-25 13:50:06,766 [INFO] Sending request to LLM | Query: 'What is the current weather in Lahore? Use the fetch_weather tool to get the data.'
+2026-06-25 13:50:08,229 [INFO] LLM decided to call fetch_weather with city: Lahore
+2026-06-25 13:50:08,229 [INFO] LLM triggered weather API call for: Lahore
+2026-06-25 13:50:09,333 [INFO] Weather data fetched successfully for Lahore
+2026-06-25 13:50:09,334 [INFO] Tool result: {
+  "city": "Lahore",
+  "country": "PK",
+  "temperature_celsius": 42.3,
+  "temperature_fahrenheit": 108.2,
+  "condition": "Few Clouds",
+  "humidity": 19,
+  "wind_speed_kmh": 7.9
+}
+2026-06-25 13:50:10,155 [INFO] LLM received tool result and is generating final response
+2026-06-25 13:50:10,155 [INFO] Response received from Gemini API
+2026-06-25 13:50:10,156 [INFO] LLM successfully orchestrated the weather API call
