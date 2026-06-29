@@ -1,6 +1,6 @@
 # Prompt Engineering - Week 2
 
-This repository contains my week 2 internship work on Prompt Engineering.
+This repository contains my week 2 internship work on Applied Generative AI Engineering.
 
 ## What is this about?
 Learning how to write better prompts for AI models using different techniques.
