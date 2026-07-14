@@ -2,7 +2,6 @@ import os
 import argparse
 
 from dotenv import load_dotenv
-from retriever import Retriever, DEFAULT_TOP_K
 
 load_dotenv()
 
