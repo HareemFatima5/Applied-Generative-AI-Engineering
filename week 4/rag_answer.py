@@ -4,23 +4,22 @@ import argparse
 from dotenv import load_dotenv
 from retriever import Retriever, DEFAULT_TOP_K
 
-load_dotenv()
+load_dotenv()  # Load environment variables from .env file
 
+# Check if Gemini is available
 try:
     import google.generativeai as genai
     GEMINI_AVAILABLE = True
 except ImportError:
     GEMINI_AVAILABLE = False
 
+# Configuration
 GENERATION_MODEL = os.environ.get("GEMINI_GENERATION_MODEL", "gemini-3.1-flash-lite")
-SYSTEM_PROMPT = (
-    "You are a helpful assistant that answers questions using only the "
-    "provided context. If the answer is not contained in the context, "
-    "say you don't have enough information."
-)
+SYSTEM_PROMPT = "You are a helpful assistant that answers questions using only the provided context. If the answer is not contained in the context, say you don't have enough information."
 
 
 def build_context(chunks: list[dict]) -> str:
+    """Build a formatted context string from retrieved chunks."""
     parts = []
     for i, chunk in enumerate(chunks, start=1):
         page = chunk.get("page")
@@ -30,6 +29,7 @@ def build_context(chunks: list[dict]) -> str:
 
 
 def generate_with_gemini(question: str, context: str, api_key: str) -> str:
+    """Generate answer using Google's Gemini API."""
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel(
         model_name=GENERATION_MODEL,
@@ -41,18 +41,23 @@ def generate_with_gemini(question: str, context: str, api_key: str) -> str:
 
 
 def generate_fallback(chunks: list[dict]) -> str:
+    """Fallback response when Gemini is not available."""
     if not chunks:
         return "No relevant context found."
     return f"Most relevant passage:\n\n{chunks[0]['text']}"
 
 
 def answer_question(question: str, top_k: int = DEFAULT_TOP_K, retriever: Retriever = None) -> dict:
+    """Main function to answer a question using RAG."""
+    # Initialize retriever if not provided
     if retriever is None:
         retriever = Retriever()
 
+    # Retrieve relevant chunks
     chunks = retriever.retrieve(question, top_k=top_k)
     context = build_context(chunks)
 
+    # Try Gemini if available, otherwise use fallback
     api_key = os.environ.get("GEMINI_API_KEY")
     if GEMINI_AVAILABLE and api_key:
         try:
@@ -66,11 +71,13 @@ def answer_question(question: str, top_k: int = DEFAULT_TOP_K, retriever: Retrie
 
 
 def main() -> None:
+    """Command-line interface for asking questions."""
     parser = argparse.ArgumentParser()
     parser.add_argument("question", nargs="*", help="Question to ask")
     parser.add_argument("--top_k", type=int, default=DEFAULT_TOP_K)
     args = parser.parse_args()
 
+    # Get question from args or prompt
     question = " ".join(args.question).strip()
     if not question:
         question = input("Enter your question: ").strip()
@@ -79,8 +86,10 @@ def main() -> None:
         print("No question entered.")
         return
 
+    # Get answer
     result = answer_question(question, top_k=args.top_k)
 
+    # Display results
     print("\nQuestion:", result["question"])
     print("\nAnswer:\n", result["answer"])
     print("\nSources used:")
