@@ -70,7 +70,7 @@ Or just run the app:
 streamlit run app.py
 ```
 
-Upload documents, hit build index in the sidebar, and ask away.
+Upload documents, hit build index in the sidebar and ask away.
 
 ## Explanation
 
