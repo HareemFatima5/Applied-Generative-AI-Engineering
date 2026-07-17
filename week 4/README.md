@@ -1,63 +1,88 @@
-# Document Retrieval and Answer Generation
+# Ask My Documents
 
-## What this is
+A RAG project I built to answer questions from my own PDFs instead of
+scrolling through them manually. Upload a document, ask something in
+plain English and get an answer along with the exact passages it came
+from we you can actually check it's right instead of just trusting it.
 
-This adds answer generation on top of the retrieval from day 2. Instead
-of just returning matching chunks, it now takes those chunks and asks
-Gemini to write an answer to the question based on them.
+![App screenshot](screenshot.png)
 
-## What I had on day 2
+## How it works
 
-By day 2, retrieval was returning the correct chunks for a question
-combining embedding search and keyword search and reranking the
-results with a cross-encoder. What it did not do yet was turn those
-chunks into an actual answer, it only returned the raw text.
+1) First, documents get split into chunks and each chunk is embedded and
+stored in a FAISS index along with which file and page it came from.
 
-## What I added on day 3
+2) When we ask a question, it doesn't just do a plain embedding search.
+It runs two searches at once, a semantic one using the embeddings and
+a keyword one (BM25) because relying on embeddings alone missed exact
+numbers and section titles more than I expected. Both sets of results
+get combined and then reranked using a cross-encoder which is slower
+but much better at telling which chunk actually answers the question
+instead of just being loosely related to it.
 
-rag_answer.py takes a question, calls the retriever from day 2 to get
-the relevant chunks and passes them as context to the Gemini API along
-with the question asking it to answer using only that context. If the
-answer is not in the context, it is told to say it does not have
-enough information rather than guessing.
+3) Once the right chunks are found, they're passed to Gemini as context
+and it writes the actual answer. If there's no API key set or the
+Gemini call fails for some reason, it just falls back to showing the
+top passage instead of breaking.
 
-If no Gemini API key is set or the API call fails for any reason, it
-falls back to returning the single most relevant chunk instead of
-generating an answer so the tool still gives a usable result rather
-than an error.
+The Streamlit app wraps all of this so we don't need to touch the
+command line at all, we can upload files, build the index and ask
+questions from the browser.
 
-## Files
+## Project structure
 
-retriever.py
-Same retriever from day 2, needed here since rag_answer.py depends on
-it directly.
+```
+ingest.py         loads and chunks documents, builds the vector store
+retriever.py      retrieves the relevant chunks for a question
+rag_answer.py     generates an answer from those chunks using Gemini
+app.py            the Streamlit app
+requirements.txt  packages needed to run everything
+```
 
-rag_answer.py
-Retrieves relevant chunks for a question and generates an answer from
-them using Gemini with a fallback to the top passage if Gemini is not
-available.
+## Setup
 
-requirements.txt
-Python packages needed to run the scripts.
+```
+pip install -r requirements.txt
+```
 
-## How to run
+If we want generated answers instead of just raw passages, we need to set our
+Gemini key:
 
-1. Install the requirements
+```
+export GEMINI_API_KEY=our_key_here
+```
 
-   pip install -r requirements.txt
+It'll still work without this, it just won't generate a full answer.
 
-2. Set your Gemini API key as an environment variable
+## Running it
 
-   export GEMINI_API_KEY=your_key_here
+Command line version, put your files in a folder called `documents`
+first:
 
-3. Build the index first if you have not already (see day 2)
+```
+python ingest.py
+python rag_answer.py "what is the attendance policy"
+```
 
-   python ingest.py
+Or just run the app:
 
-4. Ask a question
+```
+streamlit run app.py
+```
 
-   python rag_answer.py "what is the attendance policy"
+Upload documents, hit build index in the sidebar, and ask away.
 
-   This prints the generated answer along with the sources used to
-   produce it. If no API key is set, it prints the most relevant
-   passage instead of a generated answer.
+## Explanation
+
+Chunking splits on paragraph breaks instead of a fixed number of
+characters. Cutting text at exactly 2000 characters sounds fine until
+it slices a sentence in half right where the actual answer was.
+
+The candidate pool size for retrieval scales with how big the document
+is. A fixed number worked for a small handbook but completely missed
+the right chunk on a much bigger one since it just never made it into
+the pool being reranked.
+
+Embedding model is all-MiniLM-L6-v2, reranking uses
+cross-encoder/ms-marco-MiniLM-L-6-v2. The reranker only changes the
+final ranking, it has nothing to do with how chunks are stored.
