@@ -5,7 +5,7 @@ scrolling through them manually. Upload a document, ask something in
 plain English and get an answer along with the exact passages it came
 from we you can actually check it's right instead of just trusting it.
 
-![App screenshot](screenshot.png)
+![App screenshot](https://github.com/HareemFatima5/Applied-Generative-AI-Engineering/blob/main/week%204/image%201.PNG)
 
 ## How it works
 
