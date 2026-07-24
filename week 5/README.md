@@ -54,7 +54,7 @@ and that score contributes to ranking as well. Documents without a
 creation date receive no recency boost, positive or negative.
 
 All three signals are combined before the final top-k chunks are
-selected and passed to the language model for answer generation,
-along with their metadata, so retrieval is not vector similarity
+selected and passed to the language model for answer generation
+along with their metadata so retrieval is not vector similarity
 alone at any stage of the pipeline.
 
