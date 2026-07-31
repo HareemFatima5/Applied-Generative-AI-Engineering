@@ -3,24 +3,18 @@ import json
 import httpx
 import os
 
-RAPIDAPI_KEY = os.environ.get("RAPIDAPI_KEY", "")
-JSEARCH_HOST = "jsearch.p.rapidapi.com"
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
 
 
-def call_jsearch(path, params):
-    """call jsearch api with given path and params"""
-    url = f"https://{JSEARCH_HOST}{path}"
-    headers = {
-        "X-RapidAPI-Key": RAPIDAPI_KEY,
-        "X-RapidAPI-Host": JSEARCH_HOST
-    }
-    # Drop empty/None params so we don't send blank query args
+def call_backend(path, params):
+    """call fastapi backend with given path and params"""
+    url = f"{BACKEND_URL}{path}"
     clean_params = {k: v for k, v in params.items() if v not in (None, "")}
     with httpx.Client(timeout=30.0) as client:
-        resp = client.get(url, params=clean_params, headers=headers)
+        resp = client.get(url, params=clean_params)
         if resp.status_code != 200:
             raise Exception(
-                f"Status {resp.status_code} from JSearch API. "
+                f"Status {resp.status_code} from backend. "
                 f"Response body: {resp.text[:1000]}"
             )
         return resp.json()
@@ -106,10 +100,7 @@ def handle_search_jobs(args):
     """handle job search and format results"""
     query = args.get("query", "")
     location = args.get("location", "")
-    data = call_jsearch(
-        "/search",
-        {"query": f"{query} {location}".strip(), "num_pages": "1"}
-    )
+    data = call_backend("/jobs/search", {"query": query, "location": location})
     jobs = data.get("data", [])
 
     if jobs:
@@ -129,7 +120,7 @@ def handle_search_jobs(args):
 def handle_get_job_details(args):
     """get detailed info for a specific job"""
     job_id = args.get("job_id", "")
-    data = call_jsearch("/job-details", {"job_id": job_id})
+    data = call_backend(f"/jobs/{job_id}", {})
     jobs = data.get("data", [])
 
     if jobs:
@@ -152,8 +143,8 @@ def handle_get_salary_estimate(args):
     """get salary estimates for a job title in a location"""
     job_title = args.get("job_title", "")
     location = args.get("location", "")
-    data = call_jsearch(
-        "/estimated-salary",
+    data = call_backend(
+        "/salary/estimate",
         {"job_title": job_title, "location": location}
     )
     estimates = data.get("data", [])
@@ -180,8 +171,8 @@ def handle_get_company_salary(args):
     company = args.get("company", "")
     job_title = args.get("job_title", "")
     location = args.get("location", "")
-    data = call_jsearch(
-        "/company-job-salary",
+    data = call_backend(
+        "/salary/company",
         {"company": company, "job_title": job_title, "location": location}
     )
     estimates = data.get("data", [])
