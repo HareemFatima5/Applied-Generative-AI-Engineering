@@ -1,15 +1,15 @@
 # Job Search Assistant
 
-An MCP (Model Context Protocol) server that exposes job search and salary tools backed by the JSearch API on RapidAPI. It communicates over stdio using JSON-RPC 2.0, following the standard MCP handshake (`initialize`, `notifications/initialized`, `tools/list`, `tools/call`).
+An MCP server that exposes job search and salary tools backed by the JSearch API on RapidAPI. It communicates over stdio using JSON-RPC 2.0 following the standard MCP handshake (`initialize`, `notifications/initialized`, `tools/list`, `tools/call`).
 
 ## What it does
 
 The server registers four tools:
 
-- `search_jobs` — searches for job listings by query and optional location.
-- `get_job_details` — looks up full details for a single job listing by its job ID.
-- `get_salary_estimate` — returns estimated salary ranges for a job title in a location.
-- `get_company_salary` — returns estimated salary ranges for a job title at a specific company.
+- `search_jobs`: searches for job listings by query and optional location.
+- `get_job_details`: looks up full details for a single job listing by its job ID.
+- `get_salary_estimate`: returns estimated salary ranges for a job title in a location.
+- `get_company_salary`: returns estimated salary ranges for a job title at a specific company.
 
 ## Requirements
 
@@ -31,7 +31,6 @@ The server reads your RapidAPI key from the `RAPIDAPI_KEY` environment variable:
 export RAPIDAPI_KEY="your-rapidapi-key-here"
 ```
 
-The server will run without this set, but every API call will fail authentication until a valid key is provided. There is no hardcoded fallback key — always set it via the environment.
 
 ## Running the server
 
@@ -59,8 +58,6 @@ An example client config is included as `mcp_config_example.json`:
 }
 ```
 
-Update the `args` path to point at wherever you place `job_search_server.py` on disk, and drop in your real RapidAPI key. Most MCP hosts (Claude Desktop included) read this file to know which servers to launch and how.
-
 ## Tool reference
 
 ### search_jobs
@@ -76,7 +73,7 @@ Searches for job listings based on a query and an optional location.
 
 **Output**
 
-A text block listing up to 10 matching jobs, each with job title, job ID, employer name, city or country, application link, and posting date. The job ID returned here is what you pass into `get_job_details`.
+A text block listing up to 10 matching jobs each with job title, job ID, employer name, city or country, application link and posting date. The job ID returned here is what you pass into `get_job_details`.
 
 If no jobs are found, the tool returns a message saying so instead of an empty list.
 
@@ -92,7 +89,7 @@ Looks up full details for a single job listing.
 
 **Output**
 
-A text block with job title, employer name, location, employment type, posting date, application link, and the first 2000 characters of the job description.
+A text block with job title, employer name, location, employment type, posting date, application link and the first 2000 characters of the job description.
 
 If no details are found for the given ID, the tool returns a message saying so.
 
@@ -109,7 +106,7 @@ Returns estimated salary ranges for a job title in a given location.
 
 **Output**
 
-A text block listing up to 5 matching salary estimates, each with job title, minimum/maximum salary with currency and pay period, median salary, and data source (publisher).
+A text block listing up to 5 matching salary estimates, each with job title, minimum/maximum salary with currency and pay period, median salary and data source (publisher).
 
 If no salary data is found, the tool returns a message saying so.
 
@@ -127,7 +124,7 @@ Returns estimated salary ranges for a job title at a specific company.
 
 **Output**
 
-A text block listing up to 5 matching salary estimates for that company and role, each with job title, minimum/maximum salary with currency and pay period, and median salary.
+A text block listing up to 5 matching salary estimates for that company and role, each with job title, minimum/maximum salary with currency and pay period and median salary.
 
 If no data is found, the tool returns a message saying so.
 
@@ -139,14 +136,4 @@ If no data is found, the tool returns a message saying so.
 - Calling an unregistered tool returns a "Tool not found" error.
 - Calling an unrecognized method returns a "Method not found" error.
 
-## Known limitations
 
-- `search_jobs` only requests a single page of results (`num_pages: 1`), so results are capped by whatever JSearch returns on the first page, and results shown are truncated to the first 10.
-- `get_salary_estimate` and `get_company_salary` results are truncated to the first 5 entries.
-- `get_job_details` truncates the job description to 2000 characters.
-- There is no retry or rate-limit handling for RapidAPI requests.
-- The JSearch endpoint paths and parameter names used here (`/job-details`, `/estimated-salary`, `/company-job-salary`) match the current public JSearch documentation as of this writing — worth double-checking against the live API docs on RapidAPI if you hit unexpected errors, since third-party APIs do change their contracts over time.
-
-## License
-
-Add your preferred license here.
