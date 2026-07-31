@@ -2,61 +2,90 @@
 
 An MCP server that exposes job search and salary tools backed by the JSearch API on RapidAPI. It communicates over stdio using JSON-RPC 2.0 following the standard MCP handshake (`initialize`, `notifications/initialized`, `tools/list`, `tools/call`).
 
+The project is split into two parts:
+
+- `fastapi_server.py`: a FastAPI backend that talks to the JSearch API directly and exposes clean HTTP endpoints.
+- `job_search.py`: the MCP server that Claude talks to. It calls the FastAPI backend.
+
+```
+Claude -> job_search.py (MCP) -> fastapi_server.py (FastAPI) -> JSearch API
+```
+
 ## What it does
 
-The server registers four tools:
+The MCP server registers four tools:
 
 - `search_jobs`: searches for job listings by query and optional location.
 - `get_job_details`: looks up full details for a single job listing by its job ID.
 - `get_salary_estimate`: returns estimated salary ranges for a job title in a location.
 - `get_company_salary`: returns estimated salary ranges for a job title at a specific company.
 
+Each tool maps to a corresponding endpoint on the FastAPI backend:
+
+| MCP tool              | FastAPI endpoint         |
+|-----------------------|--------------------------|
+| search_jobs            | GET /jobs/search         |
+| get_job_details         | GET /jobs/{job_id}       |
+| get_salary_estimate      | GET /salary/estimate     |
+| get_company_salary       | GET /salary/company      |
+
 ## Requirements
 
 - Python 3.8+
 - `httpx`
+- `fastapi`
+- `uvicorn`
+- `python-dotenv`
 - A RapidAPI key with access to the JSearch API
 
-Install the dependency with:
+Install everything with:
 
 ```
-pip install httpx
+pip install -r requirements.txt
 ```
 
 ## Configuration
 
-The server reads your RapidAPI key from the `RAPIDAPI_KEY` environment variable:
+The FastAPI backend reads your RapidAPI key from the `RAPIDAPI_KEY` environment variable. Create a `.env` file next to `fastapi_server.py`:
 
 ```
-export RAPIDAPI_KEY="your-rapidapi-key-here"
+RAPIDAPI_KEY=your-rapidapi-key-here
 ```
 
+The MCP server reads the backend's URL from `BACKEND_URL`, defaulting to `http://localhost:8000` if not set.
 
 ## Running the server
 
+Two processes need to run.
+
+**1. Start the FastAPI backend first:**
+
 ```
-python job_search_server.py
+uvicorn fastapi_server:app --port 8000
 ```
 
-The server reads JSON-RPC requests from stdin and writes responses to stdout, one JSON object per line. It's meant to be launched by an MCP-compatible client (such as Claude Desktop or another MCP host) rather than run interactively on its own.
+
+**2. The MCP server (`job_search.py`) is launched by the MCP client itself** (Claude Desktop or another MCP host) rather than run interactively. It reads JSON-RPC requests from stdin and writes responses to stdout, one JSON object per line and forwards tool calls to the FastAPI backend over HTTP.
 
 ### Client configuration
 
-An example client config is included as `mcp_config_example.json`:
+Example client config, `mcp_config_example.json`:
 
 ```json
 {
   "mcpServers": {
     "job-search-assistant": {
       "command": "python",
-      "args": ["/absolute/path/to/job_search_server.py"],
+      "args": ["/absolute/path/to/job_search.py"],
       "env": {
-        "RAPIDAPI_KEY": "your-rapidapi-key-here"
+        "BACKEND_URL": "http://localhost:8000"
       }
     }
   }
 }
 ```
+
+The `RAPIDAPI_KEY` does not go in this config since `job_search.py` never touches JSearch directly; it only lives in the FastAPI backend's `.env` file.
 
 ## Tool reference
 
@@ -117,7 +146,7 @@ Returns estimated salary ranges for a job title at a specific company.
 **Input**
 
 | Parameter | Type   | Required | Description                                                  |
-|-----------|--------|----------|----------------------------------------------------------------|
+|-----------|--------|----------|------------------------------------------------------------------|
 | company   | string | yes      | Company name, e.g. "Systems Limited"                          |
 | job_title | string | yes      | Job title to estimate salary for, e.g. "software engineer"    |
 | location  | string | no       | Optional location filter, e.g. "Lahore, Pakistan"              |
@@ -130,10 +159,9 @@ If no data is found, the tool returns a message saying so.
 
 ## Error handling
 
-- If the JSearch API returns a non-200 status code, the server raises an exception that includes the status code and the response body, and returns it to the client as a JSON-RPC error.
+- If the JSearch API returns a non-200 status code, the FastAPI backend raises an HTTP error including the status code and response body.
+- If the FastAPI backend returns a non-200 status code, the MCP server raises an exception with the status code and response body and returns it to the client as a JSON-RPC error.
 - Malformed JSON-RPC requests are silently skipped rather than crashing the server.
 - Unexpected exceptions during request handling are caught and returned as JSON-RPC errors where possible.
 - Calling an unregistered tool returns a "Tool not found" error.
 - Calling an unrecognized method returns a "Method not found" error.
-
-
