@@ -17,7 +17,7 @@ characters, whichever comes first) rather than embedded as one giant
 blob. The column header is repeated at the top of every chunk so a
 single retrieved chunk stays interpretable without the rest of the
 table. Every chunk from a spreadsheet is flagged `is_table` the same
-way an in-PDF table is, so it gets the same "table" badge in the UI.
+way an in-PDF table is so it gets the same "table" badge in the UI.
 
 - CSV: the delimiter (comma, semicolon, pipe, etc.) is auto-detected.
 - TSV: read as tab-delimited.
