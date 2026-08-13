@@ -22,12 +22,12 @@ way an in-PDF table is, so it gets the same "table" badge in the UI.
 - CSV: the delimiter (comma, semicolon, pipe, etc.) is auto-detected.
 - TSV: read as tab-delimited.
 - XLSX/XLS: every sheet is read and chunked separately; each chunk is
-  prefixed with `Sheet: <name>` for context, and the sheet number
+  prefixed with `Sheet: <name>` for context and the sheet number
   flows through the existing "page" field.
 - XLSX workbook properties (title, author, subject, created date) are
-  read the same way PDF metadata is, so the title/author/subject
+  read the same way PDF metadata is so the title/author/subject
   boost and recency boost apply to spreadsheets too. CSV/TSV have no
-  such embedded metadata, so those fields stay empty for them.
+  such embedded metadata so those fields stay empty for them.
 
 ## Metadata extraction
 
