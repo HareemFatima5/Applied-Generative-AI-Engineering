@@ -29,12 +29,6 @@ pip install -r requirements.txt
 python train.py
 ```
 
-Optional flags:
-
-```bash
-python train.py --epochs 4 --batch-size 16 --lr 3e-5
-```
-
 This will:
 
 1. Download and split christinacdl/clickbait_detection_dataset (train/val/test)
@@ -62,5 +56,5 @@ The UI expects a fine-tuned model already saved at clickbait-distilbert/
 (i.e. run train.py first). It supports:
 
 - Single headline check with class probabilities
-- Batch scoring from an uploaded CSV, with a downloadable results file
+- Batch scoring from an uploaded CSV with a downloadable results file
 
