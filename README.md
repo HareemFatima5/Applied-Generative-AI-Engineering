@@ -1,33 +1,31 @@
-
 # Applied Generative AI Engineering Internship (8 Weeks)
 
-This repository documents the work completed during an 8-week Applied Generative AI Engineering internship, covering GenAI application development, prompt engineering, applied ML/NLP, structured extraction, RAG, and a final capstone project.
+This repository documents the work completed during an 8-week Applied Generative AI Engineering internship at RolusTech covering GenAI application development, prompt engineering, applied ML/NLP, model fine-tuning and retrieval-augmented generation over documents and tabular data.
 
 ## Roadmap
 
-### Week 1: GenAI Application Foundations
-Learn how real LLM applications are structured: prompts, API calls, JSON output, error handling, logging, and reusable LLM clients.
+### Week 1: AI Weather App
+A Streamlit app where Gemini orchestrates weather API calls through function calling rather than a fixed request flow. The LLM extracts the city from the user's query, decides when to call the `fetch_weather` tool, pulls live data from OpenWeatherMap and formats the response with practical advice.
 
-### Week 2: Prompt Engineering for Real Tasks
-Design and test prompts for summarization, classification, extraction, and structured JSON generation. Maintain prompt versions and evaluate output quality.
+### Week 2: Prompt Engineering
+Practical work on prompting techniques: zero-shot, few-shot, role-based prompting, output constraints and hallucination control. Applied to summarization, classification, entity/keyword extraction and structured JSON generation, with prompt versions tracked and compared.
 
-### Week 3: Applied ML and NLP Foundations
-Build a text classification system using Python, Pandas, Scikit-learn, TF-IDF, and Logistic Regression/Naive Bayes. Learn evaluation using accuracy, precision, recall, F1 score and confusion matrix.
+### Week 3: NLP and Text Classification
+Core ML and NLP workflow: preprocessing (tokenization, stop words, stemming vs. lemmatization), vectorization (Bag of Words, TF-IDF, embeddings) and four classifiers trained across different datasets — Logistic Regression on IMDB sentiment, Naive Bayes on SMS spam, Random Forest on spam and BBC News and SVM on 20 Newsgroups. Evaluated with accuracy, precision, recall, F1 and confusion matrices comparing behavior across balanced/imbalanced and binary/multi-class settings.
 
-### Week 4: Structured Extraction and Validation
-Use LLMs to extract structured information from documents. Validate output with Pydantic and implement retry/correction logic for invalid JSON.
+### Week 4: Ask My Documents (RAG Basics)
+A RAG pipeline for answering questions from uploaded PDFs with source passages attached. Documents are chunked and embedded into a FAISS index alongside file/page metadata. Retrieval runs semantic search and BM25 in parallel, merges the results and reranks with a cross-encoder before passing the top chunks to Gemini for answer generation falling back to raw passages if no API key is set. Wrapped in a Streamlit app for upload, indexing and querying.
 
-### Week 5: RAG Basics
-Build a basic document Q&A system using chunking, embeddings, vector store, retrieval and LLM-based answering.
+### Week 5: PDF Metadata Extraction and Matching
+Extends the RAG pipeline with structural metadata extraction — title, author, subject and creation date pulled from embedded PDF metadata or inferred from page layout when missing. Metadata is stored in a SQLite database (`vector_store/metadata.db`), separate from chunk data, and folded into retrieval as a third signal alongside vector similarity and BM25: token-overlap scoring against title/author/subject plus a recency boost when a question implies wanting the latest version of something.
 
-### Week 6: Improving RAG Quality
-Improve retrieval quality with metadata, source references, better chunking, top-k tuning and test questions.
+### Week 6: *(not yet documented)*
 
-### Week 7: GenAI Application and Agent Basics
-Connect the AI pipeline to a small Streamlit or FastAPI app. Learn basic tool-calling and controlled agent workflows.
+### Week 7: Clickbait Headline Detector
+Fine-tunes `distilbert-base-uncased` on the `christinacdl/clickbait_detection_dataset` (37.9k labeled headlines) for binary clickbait classification. Includes a training script with early stopping on validation F1, a `ClickbaitPredictor` class for inference and a Streamlit UI supporting both single-headline checks and batch CSV scoring.
 
-### Week 8: Final Project and Demo
-Finalize the Legal Document Summarizer and Q&A Bot. Prepare a GitHub repo, README, architecture diagram, demo, presentation and learning report.
+### Week 8: RAG for Tabular Data 
+Extends the document RAG pipeline with full support for tabular data — CSV, TSV, XLSX, and XLS. Spreadsheets are read with pandas and row-batched into chunks (40 rows or ~3000 characters) with the header repeated in every chunk, tagged `is_table` for consistent UI treatment alongside in-PDF tables. XLSX workbook metadata feeds the same title/author/subject and recency boosts used for PDFs. Combines semantic similarity, BM25 and metadata relevance into a single retrieval pipeline that generates answers with source attribution across mixed document and tabular corpora.
 
 ## Repository Structure
 ```
@@ -35,12 +33,9 @@ Finalize the Legal Document Summarizer and Q&A Bot. Prepare a GitHub repo, READM
 ├── week-1-genai-foundations/
 ├── week-2-prompt-engineering/
 ├── week-3-applied-ml-nlp/
-├── week-4-structured-extraction/
-├── week-5-rag-basics/
-├── week-6-rag-quality/
-├── week-7-app-and-agents/
-└── week-8-final-project/
+├── week-4-rag-basics/
+├── week-5-rag-metadata/
+├── week-6/
+├── week-7-clickbait-detector/
+└── week-8-rag-tabular-date/
 ```
-
-## Final Project
-**Legal Document Summarizer and Q&A Bot** - combines summarization, structured extraction, and RAG-based question answering over legal documents, delivered as a demo application with an accompanying architecture diagram and presentation.
