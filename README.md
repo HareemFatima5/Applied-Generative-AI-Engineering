@@ -19,7 +19,8 @@ A RAG pipeline for answering questions from uploaded PDFs with source passages a
 ### Week 5: PDF Metadata Extraction and Matching
 Extends the RAG pipeline with structural metadata extraction — title, author, subject and creation date pulled from embedded PDF metadata or inferred from page layout when missing. Metadata is stored in a SQLite database (`vector_store/metadata.db`), separate from chunk data, and folded into retrieval as a third signal alongside vector similarity and BM25: token-overlap scoring against title/author/subject plus a recency boost when a question implies wanting the latest version of something.
 
-### Week 6: *(not yet documented)*
+### Week 6: Job Search Assistant (MCP Server)
+An MCP server exposing job search and salary tools backed by the JSearch API, split into a FastAPI backend (fastapi_server.py) that talks to JSearch directly and an MCP server (job_search.py) that Claude talks to over stdio via JSON-RPC 2.0. Registers four tools — search_jobs, get_job_details, get_salary_estimate and get_company_salary, each mapped to a corresponding FastAPI endpoint, letting Claude search listings, pull job details and estimate salaries by role, location or company on request.
 
 ### Week 7: Clickbait Headline Detector
 Fine-tunes `distilbert-base-uncased` on the `christinacdl/clickbait_detection_dataset` (37.9k labeled headlines) for binary clickbait classification. Includes a training script with early stopping on validation F1, a `ClickbaitPredictor` class for inference and a Streamlit UI supporting both single-headline checks and batch CSV scoring.
